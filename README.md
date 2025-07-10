@@ -12,10 +12,6 @@ In this repository, you will find the discussions for the various educational pr
 
 | **Category** | **Purpose** 	|
 |---	|---	|
-| 📣 [Announcements](https://github.com/linero-tech/community/discussions/categories/announcements) | Updates from maintainers |
-| 👨‍⚕️ [CV, Portfolio, Jobs](https://github.com/linero-tech/community/discussions/categories/cv-portfolio-jobs) | Career-related discussions, questions, and tips |
-| 🗳️ [Polls](https://github.com/linero-tech/community/discussions/categories/polls) | Take a vote from the community |
-| 💡 [Suggestions & Feedback](https://github.com/linero-tech/community/discussions/categories/suggestions-feedback) | Share ideas or feedback on how to improve the education |
 | ❓[_General](https://github.com/linero-tech/community/discussions/categories/_general) | General help needed |
 | 🤖 [Android](https://github.com/linero-tech/community/discussions/categories/android) | Questions associated to Android |
 | 📊 [Data Visualization](https://github.com/linero-tech/community/discussions/categories/data-visualization) | Questions associated to Data Visualization |
