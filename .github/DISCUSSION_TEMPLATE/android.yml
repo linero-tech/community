@@ -1,0 +1,90 @@
+# OBS: The titles and names are used in the `android-discussion-config.yml` workflow
+# If we change any of them, we need to update the workflow too.
+
+body:
+  - type: markdown
+    attributes:
+      value: |
+        > [!IMPORTANT] 
+        > Write a title that clearly states what your question/problem is.
+  
+  - type: markdown
+    attributes:
+      value: |
+        # 1. What module do you need help with?
+
+  - type: dropdown
+    id: module
+    attributes:
+      label: I need help with module
+      options:
+        - Select a module
+        - Module 200
+        - Module 201
+        - Module 202
+        - Module 203
+        - Module 204
+      default: 0
+    validations:
+      required: true
+
+  - type: markdown
+    attributes:
+      value: |
+        # 2. What project is giving your troubles?
+
+  - type: dropdown
+    attributes:
+      label: My question is related to project
+      options:
+        - Select a project
+        - Guide App
+        - Lecture App
+        - Project 1
+        - Project 2
+        - Project 3
+        - Project 4
+        - Project 5
+        - Project 6
+        - Project 7
+        - Other
+      default: 0
+    validations:
+      required: true
+  
+  - type: markdown
+    attributes:
+      value: |
+        # 3. What do you need help with?
+
+  - type: dropdown
+    attributes:
+      label: I need help with
+      options:
+        - Select a topic
+        - Fixing an error/bug
+        - Completing the project
+        - Understanding theory from the videos
+        - Other
+      default: 0
+    validations:
+      required: true
+  
+  - type: markdown
+    attributes:
+      value: |
+        # 4. What is the problem you are experiencing?
+  
+  - type: textarea
+    attributes:
+      label: My problem is that
+      description: |
+        > [!CAUTION] 
+        > * **Do not ask others to simply give you the answer.** Focus on understanding the task, not just solving it.
+        > * **Clearly describe the problem you're facing.** Include relevant details, steps you've taken, and any error messages.
+        > * **Be specific about what you don't understand.** Highlight the exact part that is confusing or where you're getting stuck.
+        > * **Include screenshots or code snippets** to help others better understand the issue you're experiencing.
+      placeholder: |
+        "Explain what you're trying to do, what you expected to happen, and what actually happened..."
+    validations:
+      required: true

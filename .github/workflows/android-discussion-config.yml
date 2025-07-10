@@ -1,0 +1,91 @@
+name: Android Discussion Configuration
+
+on:
+  discussion:
+    types: [created]
+
+jobs:
+  update-labels:
+    if: github.event.discussion.category.name == 'android'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Apply labels via GraphQL
+        uses: actions/github-script@v7
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          script: |
+            const body = context.payload.discussion.body;
+            const discussionNodeId = context.payload.discussion.node_id;
+
+            // === Extract Module ===
+            const moduleMatch = body.match(/### I need help with module\n\n(.+?)\n/);
+            const selectedModule = moduleMatch ? moduleMatch[1].trim() : null;
+
+            const moduleLabelMap = {
+              "Module 200": "LA_kwDOM1DHBc8AAAACE7Abkw",
+              "Module 201": "LA_kwDOM1DHBc8AAAABvtrnCA",
+              "Module 202": "LA_kwDOM1DHBc8AAAABvtrocA",
+              "Module 203": "LA_kwDOM1DHBc8AAAABvtrpRA",
+              "Module 204": "LA_kwDOM1DHBc8AAAABvtrqBw"
+            };
+
+            const moduleLabelId = moduleLabelMap[selectedModule];
+            if (!moduleLabelId) {
+              console.log(`No module label ID found for: ${selectedModule}`);
+              console.log(`Discussion number: ${context.payload.discussion.number}`);
+              process.exit(1);
+            }
+            
+            // === Extract Project ===
+            const projectMatch = body.match(/### My question is related to project\n\n(.+?)\n/);
+            const projectValue = projectMatch ? projectMatch[1].trim() : null;
+
+            const projectLabelMap = {
+              "Guide App": "LA_kwDOM1DHBc8AAAACE825iA",
+              "Lecture App": "LA_kwDOM1DHBc8AAAACE827Zg",
+              "Project 1": "LA_kwDOM1DHBc8AAAACE8kF9Q",
+              "Project 2": "LA_kwDOM1DHBc8AAAACE8kIKw",
+              "Project 3": "LA_kwDOM1DHBc8AAAACE8kK_Q",
+              "Project 4": "LA_kwDOM1DHBc8AAAACE8kMXg",
+              "Project 5": "LA_kwDOM1DHBc8AAAACE8kNwA",
+              "Project 6": "LA_kwDOM1DHBc8AAAACE8kPcQ",
+              "Project 7": "LA_kwDOM1DHBc8AAAACE8kQ_g",
+              "Other": "LA_kwDOM1DHBc8AAAACE82_PA"
+            };
+
+            const projectLabelId = projectLabelMap[projectValue];
+            if (!projectLabelId) {
+              console.log(`No project label ID found for: ${projectValue}`);
+              console.log(`Discussion number: ${context.payload.discussion.number}`);
+              process.exit(1);
+            }
+
+            // === Apply all labels using GraphQL
+            const { execSync } = require('child_process');
+            const token = process.env.GITHUB_TOKEN;
+
+            const mutation = `
+              mutation {
+                addLabelsToLabelable(input: {
+                  labelableId: "${discussionNodeId}",
+                  labelIds: [
+                    "${moduleLabelId}",
+                    "${projectLabelId}"
+                  ]
+                }) {
+                  clientMutationId
+                }
+              }
+            `;
+
+            const cmd = `curl -s -X POST \
+              -H "Authorization: Bearer ${token}" \
+              -H "Content-Type: application/json" \
+              -H "Accept: application/vnd.github+json" \
+              https://api.github.com/graphql \
+              -d '${JSON.stringify({ query: mutation })}'`;
+
+            execSync(cmd, { stdio: 'inherit' });
+
+            console.log("✅ Labels applied:", selectedModule, projectValue);

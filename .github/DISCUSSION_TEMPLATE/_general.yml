@@ -1,0 +1,25 @@
+body:
+  - type: markdown
+    attributes:
+      value: |
+        > [!IMPORTANT] 
+        > Write a title that clearly states what your question/problem is.
+  
+  - type: markdown
+    attributes:
+      value: |
+        # 1. What is the problem you are experiencing?
+  
+  - type: textarea
+    attributes:
+      label: My problem is that
+      description: |
+        > [!CAUTION] 
+        > * **Do not ask others to simply give you the answer.** Focus on understanding the task, not just solving it.
+        > * **Clearly describe the problem you're facing.** Include relevant details, steps you've taken, and any error messages.
+        > * **Be specific about what you don't understand.** Highlight the exact part that is confusing or where you're getting stuck.
+        > * **Include screenshots or code snippets** to help others better understand the issue you're experiencing.
+      placeholder: |
+        "Explain what you're trying to do, what you expected to happen, and what actually happened..."
+    validations:
+      required: true

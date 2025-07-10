@@ -1,0 +1,126 @@
+name: Kotlin & Python Discussion Configuration
+
+on:
+  discussion:
+    types: [created]
+
+jobs:
+  update-labels:
+    if: |
+      github.event.discussion.category.name == 'kotlin' ||
+      github.event.discussion.category.name == 'python'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Apply labels via GraphQL
+        uses: actions/github-script@v7
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          script: |
+            const body = context.payload.discussion.body;
+            const discussionNodeId = context.payload.discussion.node_id;
+            const discussionNumber = context.payload.discussion.number;
+
+            // === Extract Module ===
+            const moduleMatch = body.match(/### I need help with module\n\n(.+?)\n/);
+            const selectedModule = moduleMatch ? moduleMatch[1].trim() : null;
+
+            const moduleLabelMap = {
+              "Module 100": "LA_kwDOM1DHBc8AAAACE69Z0A",
+              "Module 101": "LA_kwDOM1DHBc8AAAABvtoUnA",
+              "Module 102": "LA_kwDOM1DHBc8AAAABvtoV_w",
+              "Module 103": "LA_kwDOM1DHBc8AAAABvtoW_Q",
+              "Module 104": "LA_kwDOM1DHBc8AAAABvtoYRA",
+              "Module 105": "LA_kwDOM1DHBc8AAAABvtoZMA",
+              "Module 106": "LA_kwDOM1DHBc8AAAABvtoZ5w",
+              "Module 107": "LA_kwDOM1DHBc8AAAABvtobBA",
+              "Module 108": "LA_kwDOM1DHBc8AAAABvtobpA"
+            };
+            const moduleLabelId = moduleLabelMap[selectedModule];
+            if (!moduleLabelId) {
+              console.log(`No module label ID found for: ${selectedModule}`);
+              console.log(`Discussion number: ${discussionNumber}`);
+              process.exit(1);
+            }
+            
+            // === Extract Task ===
+            const taskMatch = body.match(/### My question is related to task\n\n(.+?)\n/);
+            const taskValue = taskMatch ? taskMatch[1].trim() : null;
+
+            const taskLabelMap = {
+              "Guide 1": "LA_kwDOM1DHBc8AAAACE9JFiw",
+              "Guide 2": "LA_kwDOM1DHBc8AAAACE9JGsQ",
+              "Guide 3": "LA_kwDOM1DHBc8AAAACE9JHxg",
+              "Guide 4": "LA_kwDOM1DHBc8AAAACE9JI2Q",
+              "Guide 5": "LA_kwDOM1DHBc8AAAACE9JKVg",
+              "Guide 6": "LA_kwDOM1DHBc8AAAACE9JLhA",
+              "Guide 7": "LA_kwDOM1DHBc8AAAACE9JMjg",
+              "Guide 8": "LA_kwDOM1DHBc8AAAACE9JOBw",
+              "Guide 9": "LA_kwDOM1DHBc8AAAACE9JPNQ",
+              "Guide 10": "LA_kwDOM1DHBc8AAAACE9JQmg",
+              "Guide 11": "LA_kwDOM1DHBc8AAAACE9JRmA",
+              "Guide 12": "LA_kwDOM1DHBc8AAAACE9JSww",
+              "Guide 13": "LA_kwDOM1DHBc8AAAACE9JUDw",
+              "Guide 14": "LA_kwDOM1DHBc8AAAACE9JVNA",
+              "Guide 15": "LA_kwDOM1DHBc8AAAACE9JWJw",
+              "Guide 16": "LA_kwDOM1DHBc8AAAACE9JW4w",
+              "Guide 17": "LA_kwDOM1DHBc8AAAACE9JYKQ",
+              "Guide 18": "LA_kwDOM1DHBc8AAAACE9JYuQ",
+              "Guide 19": "LA_kwDOM1DHBc8AAAACE9JZxQ",
+              "Guide 20": "LA_kwDOM1DHBc8AAAACE9Ja2Q",
+              "Guide 21": "LA_kwDOM1DHBc8AAAACE9JcBg",
+              "Guide 22": "LA_kwDOM1DHBc8AAAACE9JdOQ",
+              "Task 1": "LA_kwDOM1DHBc8AAAACE9IFFA",
+              "Task 2": "LA_kwDOM1DHBc8AAAACE9IF-g",
+              "Task 3": "LA_kwDOM1DHBc8AAAACE9IHCg",
+              "Task 4": "LA_kwDOM1DHBc8AAAACE9IIhg",
+              "Task 5": "LA_kwDOM1DHBc8AAAACE9IKBw",
+              "Task 6": "LA_kwDOM1DHBc8AAAACE9ILUA",
+              "Task 7": "LA_kwDOM1DHBc8AAAACE9IM9Q",
+              "Task 8": "LA_kwDOM1DHBc8AAAACE9ISSg",
+              "Task 9": "LA_kwDOM1DHBc8AAAACE9ITwg",
+              "Task 10": "LA_kwDOM1DHBc8AAAACE9IVmg",
+              "Task 11": "LA_kwDOM1DHBc8AAAACE9IXGw",
+              "Task 12": "LA_kwDOM1DHBc8AAAACE9IYZA",
+              "Task 13": "LA_kwDOM1DHBc8AAAACE9IaHg",
+              "Task 14": "LA_kwDOM1DHBc8AAAACE9IbkQ",
+              "Task 15": "LA_kwDOM1DHBc8AAAACE9IdHQ",
+              "Task 16": "LA_kwDOM1DHBc8AAAACE9IeeQ",
+              "Task 17": "LA_kwDOM1DHBc8AAAACE9IjEg",
+              "Task 18": "LA_kwDOM1DHBc8AAAACE9ImHA",
+              "Other": "LA_kwDOM1DHBc8AAAACE9MEFA"
+            };
+            const taskLabelId = taskLabelMap[taskValue];
+            if (!taskLabelId) {
+              console.log(`No task label ID found for: ${taskValue}`);
+              console.log(`Discussion number: ${discussionNumber}`);
+              process.exit(1);
+            }
+
+            // === Apply all labels using GraphQL
+            const { execSync } = require('child_process');
+            const token = process.env.GITHUB_TOKEN;
+
+            const mutation = `
+              mutation {
+                addLabelsToLabelable(input: {
+                  labelableId: "${discussionNodeId}",
+                  labelIds: [
+                    "${moduleLabelId}",
+                    "${taskLabelId}"
+                  ]
+                }) {
+                  clientMutationId
+                }
+              }
+            `;
+
+            const cmd = `curl -s -X POST \
+              -H "Authorization: Bearer ${token}" \
+              -H "Content-Type: application/json" \
+              -H "Accept: application/vnd.github+json" \
+              https://api.github.com/graphql \
+              -d '${JSON.stringify({ query: mutation })}'`;
+
+            execSync(cmd, { stdio: 'inherit' });
+            console.log("✅ Labels applied:", selectedModule, taskValue);

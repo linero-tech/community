@@ -1,0 +1,125 @@
+# OBS: The titles and names are used in the `android-discussion-config.yml` workflow
+# If we change any of them, we need to update the workflow too.
+
+body:
+  - type: markdown
+    attributes:
+      value: |
+        > [!IMPORTANT] 
+        > Write a title that clearly states what your question/problem is.
+  
+  - type: markdown
+    attributes:
+      value: |
+        # 1. What module do you need help with?
+
+  - type: dropdown
+    id: module
+    attributes:
+      label: I need help with module
+      options:
+        - Select a module
+        - Module 100
+        - Module 101
+        - Module 102
+        - Module 103
+        - Module 104
+        - Module 105
+        - Module 106
+        - Module 107
+        - Module 108
+      default: 0
+    validations:
+      required: true
+
+  - type: markdown
+    attributes:
+      value: |
+        # 2. What task is giving your troubles?
+
+  - type: dropdown
+    attributes:
+      label: My question is related to task
+      options:
+        - Select a task
+        - Guide 1
+        - Guide 2
+        - Guide 3
+        - Guide 4
+        - Guide 5
+        - Guide 6
+        - Guide 7
+        - Guide 8
+        - Guide 9
+        - Guide 10
+        - Guide 11
+        - Guide 12
+        - Guide 13
+        - Guide 14
+        - Guide 15
+        - Guide 16
+        - Guide 17
+        - Guide 18
+        - Guide 19
+        - Guide 20
+        - Guide 21
+        - Guide 22
+        - Task 1
+        - Task 2
+        - Task 3
+        - Task 4
+        - Task 5
+        - Task 6
+        - Task 7
+        - Task 8
+        - Task 9
+        - Task 10
+        - Task 11
+        - Task 12
+        - Task 13
+        - Task 14
+        - Task 15
+        - Task 16
+        - Task 17
+        - Task 18
+        - Other
+      default: 0
+    validations:
+      required: true
+  
+  - type: markdown
+    attributes:
+      value: |
+        # 3. What do you need help with?
+
+  - type: dropdown
+    attributes:
+      label: I need help with
+      options:
+        - Select a topic
+        - Fixing an error/bug
+        - Completing the task
+        - Understanding theory from the videos
+        - Other
+      default: 0
+    validations:
+      required: true
+  
+  - type: markdown
+    attributes:
+      value: |
+        # 4. What is the problem you are experiencing?
+  
+  - type: textarea
+    attributes:
+      label: My problem is that
+      description: |
+        > [!CAUTION] 
+        > * **Do not ask others to simply give you the answer.** Focus on understanding the task, not just solving it.
+        > * **Clearly describe the problem you're facing.** Include relevant details, steps you've taken, and any error messages.
+        > * **Be specific about what you don't understand.** Highlight the exact part that is confusing or where you're getting stuck.
+        > * **Include screenshots or code snippets** to help others better understand the issue you're experiencing.
+      placeholder: |
+        "Explain what you're trying to do, what you expected to happen, and what actually happened..."
+    validations:
+      required: true
