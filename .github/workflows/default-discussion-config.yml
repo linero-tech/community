@@ -24,6 +24,7 @@ jobs:
             // === Extract Module ===
             const moduleMatch = body.match(/### I need help with module\n\n(.+?)\n/);
             const selectedModule = moduleMatch ? moduleMatch[1].trim() : null;
+            const labels = [];
 
             const moduleLabelMap = {
               "Module 100": "LA_kwDOM1DHBc8AAAACE69Z0A",
@@ -41,6 +42,8 @@ jobs:
               console.log(`No module label ID found for: ${selectedModule}`);
               console.log(`Discussion number: ${discussionNumber}`);
               process.exit(1);
+            } else {
+              labels.push(moduleLabelId);
             }
             
             // === Extract Task ===
@@ -87,28 +90,28 @@ jobs:
               "Task 15": "LA_kwDOM1DHBc8AAAACE9IdHQ",
               "Task 16": "LA_kwDOM1DHBc8AAAACE9IeeQ",
               "Task 17": "LA_kwDOM1DHBc8AAAACE9IjEg",
-              "Task 18": "LA_kwDOM1DHBc8AAAACE9ImHA",
-              "Other": "LA_kwDOM1DHBc8AAAACE9MEFA"
+              "Task 18": "LA_kwDOM1DHBc8AAAACE9ImHA"
             };
             const taskLabelId = taskLabelMap[taskValue];
             if (!taskLabelId) {
               console.log(`No task label ID found for: ${taskValue}`);
               console.log(`Discussion number: ${discussionNumber}`);
-              process.exit(1);
+            } else {
+              labels.push(taskLabelId);
             }
 
             // === Apply all labels using GraphQL
             const { execSync } = require('child_process');
             const token = process.env.GITHUB_TOKEN;
 
+            // Convert label array to GraphQL-compliant format
+            const labelArrayGQL = labels.map(id => `"${id}"`).join(", ");
+
             const mutation = `
               mutation {
                 addLabelsToLabelable(input: {
                   labelableId: "${discussionNodeId}",
-                  labelIds: [
-                    "${moduleLabelId}",
-                    "${taskLabelId}"
-                  ]
+                  labelIds: [${labelArrayGQL}]
                 }) {
                   clientMutationId
                 }

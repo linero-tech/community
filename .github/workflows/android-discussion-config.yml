@@ -17,6 +17,7 @@ jobs:
           script: |
             const body = context.payload.discussion.body;
             const discussionNodeId = context.payload.discussion.node_id;
+            const labels = [];
 
             // === Extract Module ===
             const moduleMatch = body.match(/### I need help with module\n\n(.+?)\n/);
@@ -35,6 +36,8 @@ jobs:
               console.log(`No module label ID found for: ${selectedModule}`);
               console.log(`Discussion number: ${context.payload.discussion.number}`);
               process.exit(1);
+            } else {
+              labels.push(moduleLabelId);
             }
             
             // === Extract Project ===
@@ -50,29 +53,29 @@ jobs:
               "Project 4": "LA_kwDOM1DHBc8AAAACE8kMXg",
               "Project 5": "LA_kwDOM1DHBc8AAAACE8kNwA",
               "Project 6": "LA_kwDOM1DHBc8AAAACE8kPcQ",
-              "Project 7": "LA_kwDOM1DHBc8AAAACE8kQ_g",
-              "Other": "LA_kwDOM1DHBc8AAAACE82_PA"
+              "Project 7": "LA_kwDOM1DHBc8AAAACE8kQ_g"
             };
 
             const projectLabelId = projectLabelMap[projectValue];
             if (!projectLabelId) {
               console.log(`No project label ID found for: ${projectValue}`);
               console.log(`Discussion number: ${context.payload.discussion.number}`);
-              process.exit(1);
+            } else {
+              labels.push(projectLabelId);
             }
 
             // === Apply all labels using GraphQL
             const { execSync } = require('child_process');
             const token = process.env.GITHUB_TOKEN;
 
+            // Convert label array to GraphQL-compliant format
+            const labelArrayGQL = labels.map(id => `"${id}"`).join(", ");
+
             const mutation = `
               mutation {
                 addLabelsToLabelable(input: {
                   labelableId: "${discussionNodeId}",
-                  labelIds: [
-                    "${moduleLabelId}",
-                    "${projectLabelId}"
-                  ]
+                  labelIds: [${labelArrayGQL}]
                 }) {
                   clientMutationId
                 }

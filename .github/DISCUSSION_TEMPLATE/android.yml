@@ -38,6 +38,7 @@ body:
       label: My question is related to project
       options:
         - Select a project
+        - It's not project-related
         - Guide App
         - Lecture App
         - Project 1
@@ -47,7 +48,6 @@ body:
         - Project 5
         - Project 6
         - Project 7
-        - Other
       default: 0
     validations:
       required: true

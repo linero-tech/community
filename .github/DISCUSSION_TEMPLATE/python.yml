@@ -42,6 +42,7 @@ body:
       label: My question is related to task
       options:
         - Select a task
+        - It's not task-related
         - Guide 1
         - Guide 2
         - Guide 3
@@ -82,7 +83,6 @@ body:
         - Task 16
         - Task 17
         - Task 18
-        - Other
       default: 0
     validations:
       required: true
